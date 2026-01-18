@@ -48,4 +48,5 @@ export interface BrandingSettings {
   sloganColor: string;
   instagram?: string;
   whatsapp?: string;
+  customWhatsappMessage?: string;
 }

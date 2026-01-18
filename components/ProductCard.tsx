@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Product } from '../types';
-import { X, ChevronRight } from 'lucide-react';
+import { Product, BrandingSettings } from '../types';
+import { X, ChevronRight, MessageCircle } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +11,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [showModal, setShowModal] = useState(false);
   
   const firstLine = product.description.split('\n')[0].split('.')[0] + '.';
+
+  const handleWhatsAppOrder = () => {
+    const brandingSaved = localStorage.getItem('agape-branding-v11');
+    const branding: BrandingSettings = brandingSaved ? JSON.parse(brandingSaved) : { whatsapp: '' };
+    const phone = branding.whatsapp?.replace(/\D/g, '');
+    
+    if (!phone) {
+      alert('Número de WhatsApp não configurado no painel administrativo.');
+      return;
+    }
+
+    let messageText = branding.customWhatsappMessage || "Olá! Gostaria de fazer um pedido deste item do catálogo:\n\n*Produto:* {nome}\n*Valor:* R$ {valor}\n\nPoderia me informar a disponibilidade?";
+    
+    // Substitui placeholders
+    messageText = messageText.replace(/{nome}/gi, product.name);
+    messageText = messageText.replace(/{valor}/gi, product.price);
+
+    const message = encodeURIComponent(messageText);
+    window.open(`https://wa.me/55${phone}?text=${message}`, '_blank');
+  };
 
   return (
     <>
@@ -51,7 +71,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="relative bg-[#fdfcfb] w-full max-w-4xl max-h-[90vh] rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-[#d2b48c]/30 animate-in zoom-in-95 duration-300">
             <button 
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 z-50 p-2 bg-white/80 backdrop-blur-md rounded-full text-[#8b4513] hover:bg-white"
+              className="absolute top-4 right-4 z-50 p-2 bg-white/80 backdrop-blur-md rounded-full text-[#8b4513] hover:bg-white transition-colors"
             >
               <X size={24} />
             </button>
@@ -66,9 +86,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <p className="text-2xl font-bold text-[#8b4513] mb-6">R$ {product.price}</p>
               )}
               <div className="w-12 h-[2px] bg-[#d2b48c] mb-8"></div>
-              <p className="font-serif-soft text-2xl md:text-3xl text-[#6b5847] leading-relaxed italic whitespace-pre-wrap">
+              <p className="font-serif-soft text-2xl md:text-3xl text-[#6b5847] leading-relaxed italic whitespace-pre-wrap mb-10">
                 {product.description}
               </p>
+
+              <button 
+                onClick={handleWhatsAppOrder}
+                className="flex items-center justify-center gap-4 bg-[#2ab661] hover:bg-[#25a257] text-white py-4 px-8 rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-md transition-all active:scale-95 group"
+              >
+                <MessageCircle size={18} />
+                Encomendar via WhatsApp
+              </button>
             </div>
           </div>
         </div>

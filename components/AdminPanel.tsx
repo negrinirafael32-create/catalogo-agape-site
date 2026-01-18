@@ -185,6 +185,16 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ categories, onUpdateCategories,
                     <input className="bg-[#f4eee8] p-4 rounded-xl" placeholder="Instagram" value={branding.instagram || ''} onChange={e => onUpdateBranding({...branding, instagram: e.target.value})} />
                     <input className="bg-[#f4eee8] p-4 rounded-xl" placeholder="WhatsApp" value={branding.whatsapp || ''} onChange={e => onUpdateBranding({...branding, whatsapp: e.target.value})} />
                  </div>
+                 <div className="pt-4 border-t space-y-2">
+                    <label className="text-[10px] font-black uppercase text-[#8b4513]">Mensagem Padrão WhatsApp</label>
+                    <textarea 
+                      className="w-full bg-[#f4eee8] p-4 rounded-xl text-xs h-32" 
+                      placeholder="Use {nome} e {valor} para substituir pelos dados do produto." 
+                      value={branding.customWhatsappMessage || ''} 
+                      onChange={e => onUpdateBranding({...branding, customWhatsappMessage: e.target.value})} 
+                    />
+                    <p className="text-[9px] text-gray-400">Ex: Olá! Gostaria de pedir o item {`{nome}`} de valor R$ {`{valor}`}.</p>
+                 </div>
               </div>
             ) : currentCategory && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -219,7 +229,16 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ categories, onUpdateCategories,
                       <input type="color" className="w-full h-8" value={currentCategory.bgGradientStart} onChange={e => updateCurrentCategory({bgGradientStart: e.target.value})} />
                       <input type="color" className="w-full h-8" value={currentCategory.bgGradientEnd} onChange={e => updateCurrentCategory({bgGradientEnd: e.target.value})} />
                     </div>
-                    <button onClick={() => decoFileRef.current?.click()} className="w-full border-2 border-[#d2b48c] p-3 rounded-xl text-[10px] font-bold text-[#8b4513] hover:bg-orange-50 flex items-center justify-center gap-2"><ImageIcon size={14}/> ADICIONAR DECORAÇÃO</button>
+                    <div className="flex gap-2">
+                      <button onClick={() => decoFileRef.current?.click()} className="flex-1 border-2 border-[#d2b48c] p-3 rounded-xl text-[10px] font-bold text-[#8b4513] hover:bg-orange-50 flex items-center justify-center gap-2"><ImageIcon size={14}/> ADICIONAR DECORAÇÃO</button>
+                      <button 
+                        onClick={() => { if(confirm("Deseja remover todas as decorações desta categoria?")) updateCurrentCategory({ decorations: [] }); }} 
+                        className="w-12 border-2 border-red-100 p-3 rounded-xl text-red-400 hover:bg-red-50 flex items-center justify-center transition-colors"
+                        title="Remover todas as decorações"
+                      >
+                        <X size={16}/>
+                      </button>
+                    </div>
                     <input type="file" ref={decoFileRef} className="hidden" accept="image/*" onChange={e => handleFileUpload(e, 'decoration')} />
                   </section>
 

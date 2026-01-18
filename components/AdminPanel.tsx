@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Category, Product, Decoration, BrandingSettings, SubCategory } from '../types';
 import { X, Plus, Trash2, Settings2, Palette, Image as ImageIcon, Edit3, Star, DollarSign, Instagram, MessageCircle, ArrowUp, ArrowDown, ListFilter, Lock, User, Move, Check } from 'lucide-react';
@@ -229,14 +228,16 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ categories, onUpdateCategories,
                       <input type="color" className="w-full h-8" value={currentCategory.bgGradientStart} onChange={e => updateCurrentCategory({bgGradientStart: e.target.value})} />
                       <input type="color" className="w-full h-8" value={currentCategory.bgGradientEnd} onChange={e => updateCurrentCategory({bgGradientEnd: e.target.value})} />
                     </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => decoFileRef.current?.click()} className="flex-1 border-2 border-[#d2b48c] p-3 rounded-xl text-[10px] font-bold text-[#8b4513] hover:bg-orange-50 flex items-center justify-center gap-2"><ImageIcon size={14}/> ADICIONAR DECORAÇÃO</button>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => decoFileRef.current?.click()} className="flex-1 border-2 border-[#d2b48c] p-3 rounded-xl text-[10px] font-bold text-[#8b4513] hover:bg-orange-50 flex items-center justify-center gap-2 transition-all">
+                        <ImageIcon size={14}/> ADICIONAR DECORAÇÃO
+                      </button>
                       <button 
-                        onClick={() => { if(confirm("Deseja remover todas as decorações desta categoria?")) updateCurrentCategory({ decorations: [] }); }} 
-                        className="w-12 border-2 border-red-100 p-3 rounded-xl text-red-400 hover:bg-red-50 flex items-center justify-center transition-colors"
+                        onClick={() => { if(confirm("Deseja remover todas as decorações desta categoria?")) updateCurrentCategory({ decorations: [] }); }}
+                        className="p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all border border-red-100"
                         title="Remover todas as decorações"
                       >
-                        <X size={16}/>
+                        <X size={14} />
                       </button>
                     </div>
                     <input type="file" ref={decoFileRef} className="hidden" accept="image/*" onChange={e => handleFileUpload(e, 'decoration')} />

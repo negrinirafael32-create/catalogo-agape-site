@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Product, BrandingSettings } from '../types';
 import { X, ChevronRight, MessageCircle } from 'lucide-react';
@@ -92,7 +91,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
               <button 
                 onClick={handleWhatsAppOrder}
-                className="flex items-center justify-center gap-4 bg-[#2ab661] hover:bg-[#25a257] text-white py-4 px-8 rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-md transition-all active:scale-95 group"
+                className="flex items-center justify-center gap-4 bg-[#25D366] hover:bg-[#20ba59] text-white py-4 px-8 rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-md transition-all active:scale-95 group"
               >
                 <MessageCircle size={18} />
                 Encomendar via WhatsApp

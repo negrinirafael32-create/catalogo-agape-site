@@ -1,0 +1,65 @@
+import type { Handler } from "@netlify/functions";
+
+export const handler: Handler = async (event) => {
+  try {
+    if (event.httpMethod !== "POST") {
+      return { statusCode: 405, body: "Method Not Allowed" };
+    }
+
+    const token = process.env.GITHUB_TOKEN!;
+    const repo = process.env.GITHUB_REPO!;
+    const branch = process.env.GITHUB_BRANCH || "main";
+
+    const body = JSON.parse(event.body || "{}");
+    const content = JSON.stringify(body, null, 2);
+
+    const path = "src/data/produtos.json";
+    const apiBase = "https://api.github.com";
+
+    // 1) pegar SHA atual
+    const fileRes = await fetch(
+      `${apiBase}/repos/${repo}/contents/${path}?ref=${branch}`,
+      {
+        headers: {
+          Authorization: `token ${token}`,
+          "User-Agent": "netlify-function",
+        },
+      }
+    );
+
+    const fileJson = await fileRes.json();
+
+    // 2) atualizar arquivo
+    const updateRes = await fetch(
+      `${apiBase}/repos/${repo}/contents/${path}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `token ${token}`,
+          "User-Agent": "netlify-function",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: "Atualizar catálogo via Admin",
+          content: Buffer.from(content).toString("base64"),
+          sha: fileJson.sha,
+          branch,
+        }),
+      }
+    );
+
+    if (!updateRes.ok) {
+      throw new Error("Erro ao salvar no GitHub");
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true }),
+    };
+  } catch (err: any) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message }),
+    };
+  }
+};
